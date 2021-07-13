@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.plot.ly/plotly-2.2.0.min.js"></script>
+</head>
+<body>
+    <div id="myDiv"></div>
+    <script>
+        fetch("https://tibyte.net/sigbot").then(res => res.text()).then(txt => {
+            const rows = txt.split("\n").map(x => x.split(','));
+            const x0 = [];
+            const y0 = [];
+            const y1 = [];
+            rows.shift();
+            rows.forEach(row => {
+                x0.push(new Date(parseInt(row[0])));
+                y0.push(parseInt(row[1]));
+                y1.push(parseInt(row[2]));
+            });
+            console.log(y0);
+            const trace1 = {
+                x: x0,
+                y: y0,
+                mode: 'lines',
+                name: 'stockPrice',
+                line: {
+                dash: 'solid',
+                width: 4
+                }
+            };
+            const trace2 = {
+                x: x0,
+                y: y1,
+                mode: 'lines',
+                name: 'tibyteIndex',
+                line: {
+                dash: 'dashdot',
+                width: 4
+                }
+            };
+
+            const data = [trace1, trace2];
+
+            const layout = {
+            title: 'Josick Graph',
+                xaxis: {
+                autorange: true
+                },
+                yaxis: {
+                autorange: true
+                },
+                legend: {
+                y: 0.5,
+                traceorder: 'reversed',
+                font: {
+                    size: 16
+                }
+                }
+            };
+            
+            Plotly.newPlot('myDiv', data, layout, {responsive: true});
+        });
+    </script>
+</body>
+</html>
